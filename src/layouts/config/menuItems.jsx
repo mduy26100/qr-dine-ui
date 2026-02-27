@@ -13,35 +13,35 @@ import { SYSTEM_ROLE } from "../../constants"
 export const MENU_ITEMS = [
   {
     key: '/dashboard',
-    label: 'Dashboard',
+    label: 'Tổng quan',
     icon: Squares2X2Icon,
     roles: [SYSTEM_ROLE.SUPPER_ADMIN, SYSTEM_ROLE.MERCHANT, SYSTEM_ROLE.STAFF],
   },
   {
     key: '/merchants',
-    label: 'Merchants',
+    label: 'Quản lý cửa hàng',
     icon: BuildingStorefrontIcon,
     roles: [SYSTEM_ROLE.SUPPER_ADMIN],
   },
   {
     key: 'catalog',
-    label: 'Menu Catalog',
+    label: 'Thực đơn',
     icon: BookOpenIcon,
     roles: [SYSTEM_ROLE.MERCHANT],
     submenu: [
-        { key: '/categories', label: 'Categories' },
-        { key: '/products', label: 'Dishes' },
+        { key: '/categories', label: 'Danh mục' },
+        { key: '/products', label: 'Món ăn' },
     ]
   },
   {
     key: '/tables',
-    label: 'Tables & QR',
+    label: 'Bàn & Mã QR',
     icon: QrCodeIcon,
     roles: [SYSTEM_ROLE.MERCHANT, SYSTEM_ROLE.STAFF],
   },
   {
     key: '/orders',
-    label: 'Live Orders',
+    label: 'Đơn hàng (Live)',
     icon: ClipboardDocumentListIcon,
     roles: [SYSTEM_ROLE.MERCHANT, SYSTEM_ROLE.STAFF],
   },
@@ -50,22 +50,22 @@ export const MENU_ITEMS = [
   },
   {
     key: '/staff',
-    label: 'Staff Management',
+    label: 'Nhân viên',
     icon: UsersIcon,
     roles: [SYSTEM_ROLE.MERCHANT],
   },
   {
     key: '/reports',
-    label: 'Reports & Analytics',
+    label: 'Báo cáo doanh thu',
     icon: ChartBarIcon,
     roles: [SYSTEM_ROLE.MERCHANT],
     comingSoon: true,
   },
   {
     key: '/settings',
-    label: 'Store Settings',
+    label: 'Cài đặt hệ thống',
     icon: Cog6ToothIcon,
-    roles: [SYSTEM_ROLE.MERCHANT],
+    roles: [SYSTEM_ROLE.SUPPER_ADMIN],
   },
 ]
 
