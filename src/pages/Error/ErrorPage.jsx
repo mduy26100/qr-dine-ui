@@ -10,8 +10,10 @@ const ErrorPage = () => {
     let title = "Something went wrong";
     let subTitle = "Sorry, an unexpected error has occurred.";
 
-    if (isRouteErrorResponse(error)) {
-      switch (error.status) {
+    const errStatus = isRouteErrorResponse(error) ? error.status : (error?.status || null);
+
+    if (errStatus) {
+      switch (errStatus) {
         case 404:
           status = "404";
           title = "404";
@@ -19,7 +21,7 @@ const ErrorPage = () => {
           break;
         case 403:
           status = "403";
-          title = "403";
+          title = "403 Access Denied";
           subTitle = "Sorry, you are not authorized to access this page.";
           break;
         case 401:
@@ -34,8 +36,8 @@ const ErrorPage = () => {
           break;
         default:
           status = "error";
-          title = error.status.toString();
-          subTitle = error.statusText || "Unknown Error";
+          title = errStatus.toString();
+          subTitle = error?.statusText || "Unknown Error";
       }
     } else if (error instanceof Error) {
       status = "error";
@@ -59,8 +61,7 @@ const ErrorPage = () => {
             Back to Dashboard
           </Button>
         ]}
-      >
-      </Result>
+      />
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginAPI } from "../api";
-import { setToken, setUser } from "../../../core";
 import { SYSTEM_ROLE } from "../../../constants";
+import { useAuth } from "../../../contexts";
 
 const ALLOWED_ROLES = [SYSTEM_ROLE.SUPPER_ADMIN, SYSTEM_ROLE.MERCHANT, SYSTEM_ROLE.STAFF];
 
@@ -10,6 +10,7 @@ export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { login: contextLogin } = useAuth();
 
   const login = useCallback(async (credentials) => {
     setIsLoading(true);
@@ -25,8 +26,7 @@ export const useLogin = () => {
         throw new Error("You do not have permission to access the management portal.");
       }
 
-      setToken(response.accessToken);
-      setUser(response.user);
+      contextLogin(response.accessToken, response.user);
 
       navigate("/dashboard", { replace: true });
       
@@ -38,7 +38,7 @@ export const useLogin = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [navigate]);
+  }, [navigate, contextLogin]);
 
   return { login, isLoading, error };
 };
