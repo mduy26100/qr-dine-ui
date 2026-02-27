@@ -1,10 +1,17 @@
 import { MainLayout } from "../layouts";
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
-import { Dashboard, ErrorPage } from "../pages";
+import { Dashboard, ErrorPage, LoginPage } from "../pages";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <>
+        <Route
+            path="/login"
+            element={
+                <LoginPage />
+            }
+        />
+
         <Route path="/" 
             element={
                 <MainLayout /> 

@@ -19,6 +19,7 @@ export const setUser = (user) => {
 export const getUser = () => {
   const user = localStorage.getItem(STORAGE_KEYS.USER)
   if (!user) return null
+
   try {
     return JSON.parse(user)
   } catch {
