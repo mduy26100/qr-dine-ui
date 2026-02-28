@@ -4,7 +4,15 @@ export const useMutation = (mutationFn, options = {}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [mutatingVariables, setMutatingVariables] = useState(null);
+    
     const isMounted = useRef(true);
+    const optionsRef = useRef(options);
+    const mutationFnRef = useRef(mutationFn);
+
+    useEffect(() => {
+        optionsRef.current = options;
+        mutationFnRef.current = mutationFn;
+    });
 
     useEffect(() => {
         isMounted.current = true;
@@ -12,7 +20,7 @@ export const useMutation = (mutationFn, options = {}) => {
     }, []);
 
     const mutate = useCallback(async (variables, callOptions = {}) => {
-        const mergedOptions = { ...options, ...callOptions };
+        const mergedOptions = { ...optionsRef.current, ...callOptions };
         
         setError(null);
         setIsLoading(true);
@@ -21,7 +29,7 @@ export const useMutation = (mutationFn, options = {}) => {
         try {
             mergedOptions.onMutate?.(variables);
             
-            const result = await mutationFn(variables);
+            const result = await mutationFnRef.current(variables);
             
             if (isMounted.current) {
                 setIsLoading(false);
@@ -40,7 +48,7 @@ export const useMutation = (mutationFn, options = {}) => {
             }
             throw err;
         }
-    }, [mutationFn, options]);
+    }, []);
 
     const reset = useCallback(() => {
         setIsLoading(false);

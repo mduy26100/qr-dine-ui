@@ -1,44 +1,42 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginAPI } from "../api";
 import { SYSTEM_ROLE } from "../../../constants";
 import { useAuth } from "../../../contexts";
+import { useMutation } from "../../../core";
 
 const ALLOWED_ROLES = [SYSTEM_ROLE.SUPPER_ADMIN, SYSTEM_ROLE.MERCHANT, SYSTEM_ROLE.STAFF];
 
 export const useLogin = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { login: contextLogin } = useAuth();
 
-  const login = useCallback(async (credentials) => {
-    setIsLoading(true);
-    setError(null);
+  const handleLogin = useCallback(async (credentials) => {
+    const response = await loginAPI(credentials);
 
-    try {
-      const response = await loginAPI(credentials);
+    const userRoles = response.user?.roles || [];
+    const hasPermission = userRoles.some(role => ALLOWED_ROLES.includes(role));
 
-      const userRoles = response.user?.roles || [];
-      const hasPermission = userRoles.some(role => ALLOWED_ROLES.includes(role));
+    if (!hasPermission) {
+      throw new Error("You do not have permission to access the management portal.");
+    }
 
-      if (!hasPermission) {
-        throw new Error("You do not have permission to access the management portal.");
-      }
+    return response;
+  }, []);
 
+  const { mutate: login, isLoading, error } = useMutation(handleLogin, {
+    onSuccess: (response) => {
       contextLogin(response.accessToken, response.user);
 
-      navigate("/dashboard", { replace: true });
-      
-      return response;
-    } catch (err) {
-      const errorMessage = err?.error?.message || err?.message || "An unexpected error occurred.";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setIsLoading(false);
+      const userRoles = response.user?.roles || [];
+
+      if (userRoles.includes(SYSTEM_ROLE.SUPPER_ADMIN) || userRoles.includes(SYSTEM_ROLE.MERCHANT)) {
+        navigate("/dashboard", { replace: true });
+      } else if (userRoles.includes(SYSTEM_ROLE.STAFF)) {
+        navigate("/tables", { replace: true });
+      }
     }
-  }, [navigate, contextLogin]);
+  });
 
   return { login, isLoading, error };
 };
