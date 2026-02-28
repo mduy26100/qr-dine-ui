@@ -20,22 +20,25 @@ export const useMutation = (mutationFn, options = {}) => {
     }, []);
 
     const mutate = useCallback(async (variables, callOptions = {}) => {
-        const mergedOptions = { ...optionsRef.current, ...callOptions };
-        
         setError(null);
         setIsLoading(true);
         setMutatingVariables(variables);
 
         try {
-            mergedOptions.onMutate?.(variables);
+            optionsRef.current.onMutate?.(variables);
+            callOptions.onMutate?.(variables);
             
             const result = await mutationFnRef.current(variables);
             
             if (isMounted.current) {
                 setIsLoading(false);
                 setMutatingVariables(null);
-                mergedOptions.onSuccess?.(result, variables);
-                mergedOptions.onSettled?.();
+
+                optionsRef.current.onSuccess?.(result, variables);
+                callOptions.onSuccess?.(result, variables);
+
+                optionsRef.current.onSettled?.();
+                callOptions.onSettled?.();
             }
             return result;
         } catch (err) {
@@ -43,8 +46,12 @@ export const useMutation = (mutationFn, options = {}) => {
                 setIsLoading(false);
                 setMutatingVariables(null);
                 setError(err);
-                mergedOptions.onError?.(err, variables);
-                mergedOptions.onSettled?.();
+
+                optionsRef.current.onError?.(err, variables);
+                callOptions.onError?.(err, variables);
+
+                optionsRef.current.onSettled?.();
+                callOptions.onSettled?.();
             }
             throw err;
         }

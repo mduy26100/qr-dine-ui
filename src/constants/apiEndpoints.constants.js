@@ -5,7 +5,7 @@ export const ENDPOINTS = {
         REGISTER_STAFF: "/users/register-staff"
     },
     MANAGEMENT: {
-        CATAGLOG: {
+        CATALOG: {
             CATEGORIES: "/management/categories",
             PRODUCTS: "/management/products",
             TABLES: "/management/tables"

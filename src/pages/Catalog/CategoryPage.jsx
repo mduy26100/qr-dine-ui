@@ -2,16 +2,19 @@ import React, { useState, useCallback } from 'react';
 import { Button, Card, Typography, Space, message, Modal } from 'antd';
 import { PlusIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { CategoryTable } from '../../features/catalog/categories/components/CategoryTable';
+import { useCreateCategory } from '../../features/catalog/categories/hooks/useCreateCategory';
 import { useGetMyCategories } from '../../features/catalog/categories/hooks/useGetMyCategories';
+import UpsertCategoryModal from '../../features/catalog/categories/components/UpsertCategoryModal';
+import CategoryTable from '../../features/catalog/categories/components/CategoryTable';
 
 const { Title, Text } = Typography;
 
-export const CategoryPage = () => {
+const CategoryPage = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [modal, modalContextHolder] = Modal.useModal();
     
     const { data: responseData, isLoading, refetch } = useGetMyCategories();
+    const { create, isLoading: isCreating } = useCreateCategory();
     
     const categories = responseData || [];
     
@@ -32,6 +35,34 @@ export const CategoryPage = () => {
         setIsModalOpen(false);
         setEditingRecord(null);
     }, []);
+
+    const handleSubmit = useCallback(async (values) => {
+        if (editingRecord) {
+            messageApi.open({
+                type: 'info',
+                content: 'Tính năng cập nhật đang được phát triển',
+            });
+            handleCloseModal();
+            return;
+        }
+
+        await create(values, {
+            onSuccess: () => {
+                messageApi.open({
+                    type: 'success',
+                    content: `Thêm danh mục "${values.name}" thành công`,
+                });
+                handleCloseModal();
+                refetch();
+            },
+            onError: (error) => {
+                messageApi.open({
+                    type: 'error',
+                    content: error?.error?.message || error?.message || 'Có lỗi xảy ra khi thêm danh mục',
+                });
+            }
+        });
+    }, [editingRecord, create, messageApi, handleCloseModal, refetch]);
 
     const handleDelete = useCallback((record) => {
         modal.confirm({
@@ -101,23 +132,16 @@ export const CategoryPage = () => {
                 />
             </Card>
 
-            <Modal
-                title={editingRecord ? "Chỉnh sửa danh mục" : "Thêm danh mục mới"}
+            <UpsertCategoryModal
                 open={isModalOpen}
                 onCancel={handleCloseModal}
-                onOk={() => {
-                    messageApi.open({
-                        type: 'info',
-                        content: 'Tính năng lưu đang được phát triển',
-                    });
-                    handleCloseModal();
-                }}
-                okText="Lưu"
-                cancelText="Hủy"
-                okButtonProps={{ className: "bg-blue-600" }}
-            >
-                <p className="py-4 text-gray-500">Form cập nhật danh mục sẽ hiển thị ở đây...</p>
-            </Modal>
+                onSubmit={handleSubmit}
+                confirmLoading={isCreating}
+                categoryList={categories}
+                initialValues={editingRecord}
+            />
         </div>
     );
 };
+
+export default CategoryPage;
