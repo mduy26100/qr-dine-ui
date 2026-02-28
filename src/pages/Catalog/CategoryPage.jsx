@@ -4,6 +4,7 @@ import { PlusIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { useCreateCategory } from '../../features/catalog/categories/hooks/useCreateCategory';
 import { useGetMyCategories } from '../../features/catalog/categories/hooks/useGetMyCategories';
+import { useUpdateCategory } from '../../features/catalog/categories/hooks/useUpdateCategory'; // Thêm hook update
 import UpsertCategoryModal from '../../features/catalog/categories/components/UpsertCategoryModal';
 import CategoryTable from '../../features/catalog/categories/components/CategoryTable';
 
@@ -15,6 +16,7 @@ const CategoryPage = () => {
     
     const { data: responseData, isLoading, refetch } = useGetMyCategories();
     const { create, isLoading: isCreating } = useCreateCategory();
+    const { update, isUpdating } = useUpdateCategory();
     
     const categories = responseData || [];
     
@@ -37,20 +39,16 @@ const CategoryPage = () => {
     }, []);
 
     const handleSubmit = useCallback(async (values) => {
-        if (editingRecord) {
-            messageApi.open({
-                type: 'info',
-                content: 'Tính năng cập nhật đang được phát triển',
-            });
-            handleCloseModal();
-            return;
-        }
+        const isEdit = !!editingRecord;
+        const action = isEdit ? update : create;
+        
+        const payload = isEdit ? { id: editingRecord.id, ...values } : values;
 
-        await create(values, {
+        await action(payload, {
             onSuccess: () => {
                 messageApi.open({
                     type: 'success',
-                    content: `Thêm danh mục "${values.name}" thành công`,
+                    content: `${isEdit ? 'Cập nhật' : 'Thêm'} danh mục "${values.name}" thành công`,
                 });
                 handleCloseModal();
                 refetch();
@@ -58,11 +56,11 @@ const CategoryPage = () => {
             onError: (error) => {
                 messageApi.open({
                     type: 'error',
-                    content: error?.error?.message || error?.message || 'Có lỗi xảy ra khi thêm danh mục',
+                    content: error?.error?.message || error?.message || 'Có lỗi xảy ra',
                 });
             }
         });
-    }, [editingRecord, create, messageApi, handleCloseModal, refetch]);
+    }, [editingRecord, create, update, messageApi, handleCloseModal, refetch]);
 
     const handleDelete = useCallback((record) => {
         modal.confirm({
@@ -136,7 +134,7 @@ const CategoryPage = () => {
                 open={isModalOpen}
                 onCancel={handleCloseModal}
                 onSubmit={handleSubmit}
-                confirmLoading={isCreating}
+                confirmLoading={isCreating || isUpdating}
                 categoryList={categories}
                 initialValues={editingRecord}
             />

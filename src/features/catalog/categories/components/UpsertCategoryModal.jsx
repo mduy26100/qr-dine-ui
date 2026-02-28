@@ -11,6 +11,14 @@ const UpsertCategoryModal = ({
 }) => {
     const [form] = Form.useForm();
     const isEdit = !!initialValues;
+    
+    const shouldShowParentSelect = useMemo(() => {
+        if (!isEdit) return true;
+        if (initialValues?.parentId !== null) return true;
+        
+        const hasChildren = initialValues?.children && initialValues.children.length > 0;
+        return !hasChildren;
+    }, [isEdit, initialValues]);
 
     const parentOptions = useMemo(() => {
         return categoryList
@@ -44,7 +52,7 @@ const UpsertCategoryModal = ({
                 description: values.description || "",
                 displayOrder: values.displayOrder || 1,
                 isActive: values.isActive,
-                parentId: values.parentId || null,
+                parentId: shouldShowParentSelect ? (values.parentId || null) : null,
             };
 
             onSubmit(payload, form);
@@ -98,20 +106,22 @@ const UpsertCategoryModal = ({
                     <Input.TextArea placeholder="Mô tả ngắn về danh mục này..." rows={3} className="rounded-lg py-2" />
                 </Form.Item>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <Form.Item 
-                        name="parentId" 
-                        label="Danh mục cha"
-                    >
-                        <Select
-                            placeholder="Là danh mục gốc"
-                            allowClear
-                            options={parentOptions}
-                            className="rounded-lg"
-                            showSearch
-                            optionFilterProp="label"
-                        />
-                    </Form.Item>
+                <div className={`grid ${shouldShowParentSelect ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
+                    {shouldShowParentSelect && (
+                        <Form.Item 
+                            name="parentId" 
+                            label="Danh mục cha"
+                        >
+                            <Select
+                                placeholder="Là danh mục gốc"
+                                allowClear
+                                options={parentOptions}
+                                className="rounded-lg"
+                                showSearch
+                                optionFilterProp="label"
+                            />
+                        </Form.Item>
+                    )}
 
                     <Form.Item 
                         name="displayOrder" 

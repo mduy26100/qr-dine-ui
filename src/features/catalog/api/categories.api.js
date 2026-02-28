@@ -10,3 +10,7 @@ export const getMyCategories = () => {
 export const createCategory = (data) => {
     return axiosClient.post(CATALOG_CATEGORY_ENDPOINT, data);
 };
+
+export const updateCategory = ({ id, ...data }) => {
+    return axiosClient.put(`${CATALOG_CATEGORY_ENDPOINT}/${id}`, data);
+};
