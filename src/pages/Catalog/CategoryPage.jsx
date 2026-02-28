@@ -4,7 +4,8 @@ import { PlusIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { useCreateCategory } from '../../features/catalog/categories/hooks/useCreateCategory';
 import { useGetMyCategories } from '../../features/catalog/categories/hooks/useGetMyCategories';
-import { useUpdateCategory } from '../../features/catalog/categories/hooks/useUpdateCategory'; // Thêm hook update
+import { useUpdateCategory } from '../../features/catalog/categories/hooks/useUpdateCategory';
+import { useDeleteCategory } from '../../features/catalog/categories/hooks/useDeleteCategory'; // Thêm hook delete
 import UpsertCategoryModal from '../../features/catalog/categories/components/UpsertCategoryModal';
 import CategoryTable from '../../features/catalog/categories/components/CategoryTable';
 
@@ -17,6 +18,7 @@ const CategoryPage = () => {
     const { data: responseData, isLoading, refetch } = useGetMyCategories();
     const { create, isLoading: isCreating } = useCreateCategory();
     const { update, isUpdating } = useUpdateCategory();
+    const { remove } = useDeleteCategory();
     
     const categories = responseData || [];
     
@@ -82,13 +84,24 @@ const CategoryPage = () => {
             centered: true,
             maskClosable: true,
             onOk: async () => {
-                messageApi.open({
-                    type: 'info',
-                    content: 'Tính năng xóa đang được phát triển',
+                await remove(record.id, {
+                    onSuccess: () => {
+                        messageApi.open({
+                            type: 'success',
+                            content: `Đã xóa danh mục "${record.name}"`,
+                        });
+                        refetch();
+                    },
+                    onError: (error) => {
+                        messageApi.open({
+                            type: 'error',
+                            content: error?.error?.message || error?.message || 'Không thể xóa danh mục này',
+                        });
+                    }
                 });
             },
         });
-    }, [modal, messageApi]);
+    }, [modal, messageApi, remove, refetch]);
 
     return (
         <div className="animate-fade-in space-y-6">

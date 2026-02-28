@@ -14,3 +14,7 @@ export const createCategory = (data) => {
 export const updateCategory = ({ id, ...data }) => {
     return axiosClient.put(`${CATALOG_CATEGORY_ENDPOINT}/${id}`, data);
 };
+
+export const deleteCategory = (id) => {
+    return axiosClient.delete(`${CATALOG_CATEGORY_ENDPOINT}/${id}`);
+};
