@@ -4,7 +4,7 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 const { Text } = Typography;
 
-const CategoryTable = ({ data = [], loading, onEdit, onDelete }) => {
+const CategoryTableComponent  = ({ data = [], loading, onEdit, onDelete }) => {
     const columns = useMemo(() => [
         {
             title: 'Tên danh mục',
@@ -104,4 +104,4 @@ const CategoryTable = ({ data = [], loading, onEdit, onDelete }) => {
     );
 };
 
-export default React.memo(CategoryTable);
+export const CategoryTable = React.memo(CategoryTableComponent);

@@ -2,12 +2,12 @@ import React, { useState, useCallback } from 'react';
 import { Button, Card, Typography, Space, message, Modal } from 'antd';
 import { PlusIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { useGetMyCategories } from '../../features/catalog/categories/hooks';
-import CategoryTable from '../../features/catalog/categories/components/CategoryTable';
+import { CategoryTable } from '../../features/catalog/categories/components/CategoryTable';
+import { useGetMyCategories } from '../../features/catalog/categories/hooks/useGetMyCategories';
 
 const { Title, Text } = Typography;
 
-const CategoryPage = () => {
+export const CategoryPage = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [modal, modalContextHolder] = Modal.useModal();
     
@@ -93,7 +93,7 @@ const CategoryPage = () => {
             </div>
 
             <Card className="shadow-sm border-gray-100 rounded-2xl overflow-hidden">
-                <CategoryTable 
+                <CategoryTable
                     data={categories} 
                     loading={isLoading} 
                     onEdit={handleOpenEdit}
@@ -121,5 +121,3 @@ const CategoryPage = () => {
         </div>
     );
 };
-
-export default CategoryPage;
