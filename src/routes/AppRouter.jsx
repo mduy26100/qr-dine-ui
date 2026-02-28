@@ -4,6 +4,7 @@ import { Dashboard, ErrorPage, LoginPage } from "../pages";
 import { SYSTEM_ROLE } from "../constants";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import CategoryPage from "../pages/Catalog/CategoryPage";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -26,6 +27,15 @@ const router = createBrowserRouter(
             >
                 <Route index element={<Navigate to="/dashboard" replace />} />
                 <Route path="dashboard" element={<Dashboard />} />
+
+                <Route
+                path="categories"
+                element={
+                    <PrivateRoute allowedRoles={[SYSTEM_ROLE.MERCHANT]}>
+                        <CategoryPage />
+                    </PrivateRoute>
+                    }
+                />
             </Route>
 
             <Route path="*" element={<ErrorPage />} />
