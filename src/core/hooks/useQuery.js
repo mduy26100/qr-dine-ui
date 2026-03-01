@@ -18,9 +18,11 @@ export const useQuery = (key, queryFn, options = {}) => {
     } = options;
 
     const optionsRef = useRef(options);
+    const queryFnRef = useRef(queryFn);
     
     useEffect(() => {
         optionsRef.current = options;
+        queryFnRef.current = queryFn;
     });
 
     const getCachedData = useCallback(() => {
@@ -58,7 +60,7 @@ export const useQuery = (key, queryFn, options = {}) => {
         setError(null);
 
         try {
-            const response = await queryFn({ signal });
+            const response = await queryFnRef.current({ signal });
 
             const transformedData = optionsRef.current.transformResponse
                 ? optionsRef.current.transformResponse(response)
@@ -83,7 +85,7 @@ export const useQuery = (key, queryFn, options = {}) => {
                 setIsLoading(false);
             }
         }
-    }, [key, queryFn, enabled, getCachedData]);
+    }, [key, enabled, getCachedData]);
 
     useEffect(() => {
         fetchData();

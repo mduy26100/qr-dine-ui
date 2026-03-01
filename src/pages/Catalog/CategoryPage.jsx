@@ -5,7 +5,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons';
 import { useCreateCategory } from '../../features/catalog/categories/hooks/useCreateCategory';
 import { useGetMyCategories } from '../../features/catalog/categories/hooks/useGetMyCategories';
 import { useUpdateCategory } from '../../features/catalog/categories/hooks/useUpdateCategory';
-import { useDeleteCategory } from '../../features/catalog/categories/hooks/useDeleteCategory'; // Thêm hook delete
+import { useDeleteCategory } from '../../features/catalog/categories/hooks/useDeleteCategory';
 import UpsertCategoryModal from '../../features/catalog/categories/components/UpsertCategoryModal';
 import CategoryTable from '../../features/catalog/categories/components/CategoryTable';
 

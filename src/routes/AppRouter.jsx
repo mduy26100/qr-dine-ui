@@ -1,6 +1,6 @@
 import { MainLayout } from "../layouts";
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
-import { Dashboard, ErrorPage, LoginPage, CategoryPage } from "../pages";
+import { Dashboard, ErrorPage, LoginPage, CategoryPage, ProductPage } from "../pages";
 import { SYSTEM_ROLE } from "../constants";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
@@ -42,6 +42,15 @@ const router = createBrowserRouter(
                     element={
                         <RoleRoute roles={[SYSTEM_ROLE.MERCHANT]}>
                             <CategoryPage />
+                        </RoleRoute>
+                    }
+                />
+
+                <Route
+                    path="products"
+                    element={
+                        <RoleRoute roles={[SYSTEM_ROLE.MERCHANT]}>
+                            <ProductPage />
                         </RoleRoute>
                     }
                 />
