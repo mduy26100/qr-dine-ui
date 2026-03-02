@@ -1,5 +1,5 @@
-import { QUERY_KEYS } from "../../../../constants";
-import { invalidateCache, useMutation } from "../../../../core";
+import { QUERY_KEYS } from "../../../../shared/constants";
+import { invalidateCache, useMutation } from "../../../../infrastructure";
 import { deleteCategory } from "../../api";
 
 export const useDeleteCategory = (options = {}) => {

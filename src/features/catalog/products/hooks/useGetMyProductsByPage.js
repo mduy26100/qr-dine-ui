@@ -1,5 +1,5 @@
-import { useQuery } from "../../../../core";
-import { QUERY_KEYS } from "../../../../constants";
+import { useQuery } from "../../../../infrastructure";
+import { QUERY_KEYS } from "../../../../shared/constants";
 import { getMyProductsByPage } from "../../api";
 
 export const useGetMyProductsByPage = (filters = {}, options = {}) => {

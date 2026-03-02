@@ -3,7 +3,7 @@ import { Form, Input, Button, Checkbox, Tooltip } from 'antd';
 import { UserOutlined, LockOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { STORAGE_KEYS } from '../../../core/constants';
+import { STORAGE_KEYS } from '../../../infrastructure/storage';
 
 const LoginForm = ({ onFinish, isLoading }) => {
     const [form] = Form.useForm();

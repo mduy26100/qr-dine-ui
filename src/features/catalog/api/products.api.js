@@ -1,5 +1,5 @@
-import { axiosClient } from "../../../config";
-import { ENDPOINTS } from "../../../constants";
+import { axiosClient } from "../../../infrastructure";
+import { ENDPOINTS } from "../../../shared/constants";
 
 const CATALOG_PRODUCT_ENDPOINT = ENDPOINTS.MANAGEMENT.CATALOG.PRODUCTS;
 

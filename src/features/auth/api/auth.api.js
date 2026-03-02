@@ -1,5 +1,5 @@
-import { axiosClient } from "../../../config";
-import { ENDPOINTS } from "../../../constants";
+import { axiosClient } from "../../../infrastructure";
+import { ENDPOINTS } from "../../../shared/constants";
 
 export const loginAPI = async (data) => {
     const response = await axiosClient.post(`${ENDPOINTS.IDENTITY.LOGIN}`, {
