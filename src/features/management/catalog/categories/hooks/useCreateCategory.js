@@ -1,5 +1,5 @@
-import { QUERY_KEYS } from "../../../../shared/constants";
-import { invalidateCache, useMutation } from "../../../../infrastructure";
+import { QUERY_KEYS } from "../../../../../shared/constants";
+import { invalidateCache, useMutation } from "../../../../../infrastructure";
 import { createCategory } from "../../api";
 
 export const useCreateCategory = (options = {}) => {

@@ -1,5 +1,5 @@
-import { useQuery } from "../../../../infrastructure";
-import { QUERY_KEYS } from "../../../../shared/constants";
+import { useQuery } from "../../../../../infrastructure/query";
+import { QUERY_KEYS } from "../../../../../shared/constants/queryKeys.constants";
 import { getMyProductsByCursor } from "../../api";
 
 export const useGetMyProductsByCursor = (filters = {}, options = {}) => {

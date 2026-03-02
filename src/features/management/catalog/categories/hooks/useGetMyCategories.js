@@ -1,5 +1,5 @@
-import { QUERY_KEYS } from "../../../../shared/constants";
-import { useQuery } from "../../../../infrastructure";
+import { useQuery } from "../../../../../infrastructure/query";
+import { QUERY_KEYS } from "../../../../../shared/constants/queryKeys.constants";
 import { getMyCategories } from "../../api";
 
 export const useGetMyCategories = (options = {}) => {

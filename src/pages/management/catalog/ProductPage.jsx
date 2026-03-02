@@ -3,11 +3,11 @@ import { Button, Card, Typography, Space, message, Modal, Segmented, Input, Sele
 import { PlusIcon, ArrowPathIcon, TableCellsIcon, Squares2X2Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
-import ProductTable from '../../features/catalog/products/components/ProductTable';
-import ProductList from '../../features/catalog/products/components/ProductList'; 
-import { useGetMyProductsByPage } from '../../features/catalog/products/hooks/useGetMyProductsByPage';
-import { useGetMyProductsByCursor } from '../../features/catalog/products/hooks/useGetMyProductsByCursor';
-import { useGetMyCategories } from '../../features/catalog/categories/hooks/useGetMyCategories';
+import ProductTable from '../../../features/management/catalog/products/components/ProductTable';
+import ProductList from '../../../features/management/catalog/products/components/ProductList'; 
+import { useGetMyProductsByPage } from '../../../features/management/catalog/products/hooks/useGetMyProductsByPage';
+import { useGetMyProductsByCursor } from '../../../features/management/catalog/products/hooks/useGetMyProductsByCursor';
+import { useGetMyCategories } from '../../../features/management/catalog/categories/hooks/useGetMyCategories';
 
 const { Title, Text } = Typography;
 

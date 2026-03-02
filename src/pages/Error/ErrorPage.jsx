@@ -1,19 +1,17 @@
 import { Button, Result } from "antd";
-import { useRouteError, useNavigate, isRouteErrorResponse } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const ErrorPage = () => {
-  const error = useRouteError();
+const ErrorPage = ({ errorStatus = 404, errorMessage = null }) => {
   const navigate = useNavigate();
 
   const getErrorContent = () => {
-    let status = "500";
-    let title = "Something went wrong";
-    let subTitle = "Sorry, an unexpected error has occurred.";
+    let status = "404";
+    let title = "404";
+    let subTitle = "Sorry, the page you visited does not exist.";
 
-    const errStatus = isRouteErrorResponse(error) ? error.status : (error?.status || null);
-
-    if (errStatus) {
-      switch (errStatus) {
+    // If errorStatus is provided, use it
+    if (errorStatus) {
+      switch (errorStatus) {
         case 404:
           status = "404";
           title = "404";
@@ -25,7 +23,7 @@ const ErrorPage = () => {
           subTitle = "Sorry, you are not authorized to access this page.";
           break;
         case 401:
-          status = "403";
+          status = "401";
           title = "401";
           subTitle = "Sorry, you need to login to access this page.";
           break;
@@ -36,13 +34,9 @@ const ErrorPage = () => {
           break;
         default:
           status = "error";
-          title = errStatus.toString();
-          subTitle = error?.statusText || "Unknown Error";
+          title = errorStatus.toString();
+          subTitle = errorMessage || "Unknown Error";
       }
-    } else if (error instanceof Error) {
-      status = "error";
-      title = "Application Error";
-      subTitle = error.message;
     }
 
     return { status, title, subTitle };
@@ -57,9 +51,9 @@ const ErrorPage = () => {
         title={title}
         subTitle={subTitle}
         extra={[
-          <Button key="back" onClick={() => navigate("/dashboard")}>
+          <Button key="back" onClick={() => navigate("/management/dashboard")}>
             Back to Dashboard
-          </Button>
+          </Button>,
         ]}
       />
     </div>

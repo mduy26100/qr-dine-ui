@@ -1,10 +1,10 @@
 export const ENDPOINTS = {
-    IDENTITY: {
-        LOGIN: "/auth/login",
-        REGISTER_MERCHANT: "/users/register-merchant",
-        REGISTER_STAFF: "/users/register-staff"
-    },
     MANAGEMENT: {
+        AUTH: {
+            LOGIN: "/auth/login",
+            REGISTER_MERCHANT: "/users/register-merchant",
+            REGISTER_STAFF: "/users/register-staff"
+        },
         CATALOG: {
             CATEGORIES: "/management/categories",
             PRODUCTS: "/management/products",
@@ -13,7 +13,7 @@ export const ENDPOINTS = {
     },
     STOREFRONT: {
         CATALOG: {
-            CATEGORIRES: (merchantId) => `/storefront/merchants/${merchantId}/categories`,
+            CATEGORIES: (merchantId) => `/storefront/merchants/${merchantId}/categories`,
             PRODUCTS: (merchantId, categoryId) => `/storefront/merchants/${merchantId}/products?categoryId=${categoryId}`
         }
     }
