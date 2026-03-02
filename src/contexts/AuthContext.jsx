@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { 
     getToken, getUser, setToken, setUser as setStorageUser, clearAuth,
-    isTokenExpired, getUserRoles 
+    isTokenExpired, getUserRoles, clearGlobalCache
 } from '../core';
 import { SYSTEM_ROLE } from '../constants';
 
@@ -39,6 +39,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const handleLogout = () => {
+        clearGlobalCache();
         clearAuth();
         setCurrentUser(null);
     };
