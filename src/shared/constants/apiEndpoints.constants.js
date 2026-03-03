@@ -1,20 +1,23 @@
 export const ENDPOINTS = {
-    MANAGEMENT: {
-        AUTH: {
-            LOGIN: "/auth/login",
-            REGISTER_MERCHANT: "/users/register-merchant",
-            REGISTER_STAFF: "/users/register-staff"
-        },
-        CATALOG: {
-            CATEGORIES: "/management/categories",
-            PRODUCTS: "/management/products",
-            TABLES: "/management/tables"
-        }
+  MANAGEMENT: {
+    AUTH: {
+      LOGIN: "/auth/login",
+      LOGOUT: "/users/logout",
+      REGISTER_MERCHANT: "/users/register-merchant",
+      REGISTER_STAFF: "/users/register-staff",
     },
-    STOREFRONT: {
-        CATALOG: {
-            CATEGORIES: (merchantId) => `/storefront/merchants/${merchantId}/categories`,
-            PRODUCTS: (merchantId, categoryId) => `/storefront/merchants/${merchantId}/products?categoryId=${categoryId}`
-        }
-    }
+    CATALOG: {
+      CATEGORIES: "/management/categories",
+      PRODUCTS: "/management/products",
+      TABLES: "/management/tables",
+    },
+  },
+  STOREFRONT: {
+    CATALOG: {
+      CATEGORIES: (merchantId) =>
+        `/storefront/merchants/${merchantId}/categories`,
+      PRODUCTS: (merchantId, categoryId) =>
+        `/storefront/merchants/${merchantId}/products?categoryId=${categoryId}`,
+    },
+  },
 };

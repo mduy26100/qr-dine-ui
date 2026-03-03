@@ -12,3 +12,11 @@ export const loginAPI = async (data) => {
 
   return response;
 };
+
+export const logoutAPI = async () => {
+  const response = await axiosClient.post(
+    `${ENDPOINTS.MANAGEMENT.AUTH.LOGOUT}`,
+  );
+
+  return response;
+};
