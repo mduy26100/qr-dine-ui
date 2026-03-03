@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Typography, Row, Col, message } from "antd";
 import { QrcodeOutlined } from "@ant-design/icons";
 import { useLogin } from "../../../features/management/auth";
+import { getErrorMessage } from "../../../shared/utils";
 import LoginForm from "../../../features/management/auth/components/LoginForm";
 
 const { Title, Text } = Typography;
@@ -14,10 +15,10 @@ const LoginPage = () => {
     try {
       await login(values);
     } catch (error) {
-      const errorMessage =
-        error?.error?.message ||
-        error?.message ||
-        "Login failed. Please check your credentials.";
+      const errorMessage = getErrorMessage(
+        error,
+        "Login failed. Please check your credentials.",
+      );
 
       messageApi.open({
         type: "error",
