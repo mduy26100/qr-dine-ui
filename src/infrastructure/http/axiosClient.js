@@ -1,5 +1,7 @@
 import axios from "axios";
 import { clearAuth, getToken } from "../storage";
+import { tokenManager } from "./tokenManager";
+import { refreshTokenAPI } from "../../features/management/auth/api";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -23,6 +25,72 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
+const requestQueue = [];
+
+const addRequestToQueue = (callback) => {
+  return new Promise((resolve, reject) => {
+    requestQueue.push({ callback, resolve, reject });
+  });
+};
+
+const processQueue = () => {
+  let request;
+  while ((request = requestQueue.shift())) {
+    try {
+      request.resolve();
+    } catch (error) {
+      request.reject(error);
+    }
+  }
+};
+
+const refreshAccessToken = async () => {
+  if (tokenManager.isTokenRefreshing()) {
+    return addRequestToQueue(() => {});
+  }
+
+  tokenManager.setRefreshing(true);
+
+  try {
+    const response = await axios.post(
+      `${API_URL}${"/auth/refresh-token"}`,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
+
+    const newAccessToken =
+      response.data?.data?.accessToken || response.data?.accessToken;
+    const expiresInMinutes =
+      response.data?.data?.expiresInMinutes ||
+      response.data?.expiresInMinutes ||
+      15;
+
+    tokenManager.setToken(newAccessToken, expiresInMinutes);
+
+    tokenManager.notifyRefreshSubscribers(newAccessToken);
+
+    processQueue();
+
+    return newAccessToken;
+  } catch (error) {
+    tokenManager.setRefreshing(false);
+    tokenManager.failRefreshSubscribers();
+    clearAuth();
+
+    if (
+      !window.location.pathname.includes("login") &&
+      !window.location.pathname.includes("auth") &&
+      !window.location.pathname.includes("register")
+    ) {
+      window.location.href = "/management/login";
+    }
+
+    return Promise.reject(error);
+  }
+};
+
 axiosClient.interceptors.response.use(
   (response) => {
     if (response.status === 204) {
@@ -37,7 +105,7 @@ axiosClient.interceptors.response.use(
 
     return apiResponse.data ?? apiResponse;
   },
-  (error) => {
+  async (error) => {
     if (error.code === "ECONNABORTED") {
       return Promise.reject({
         error: {
@@ -59,10 +127,38 @@ axiosClient.interceptors.response.use(
           window.location.pathname.includes("auth") ||
           window.location.pathname.includes("register");
 
-        if (!isAuthPage) {
-          clearAuth();
-          window.location.href = "/management/login";
-          return new Promise(() => {});
+        if (isAuthPage) {
+          return Promise.reject(apiResponse);
+        }
+
+        try {
+          const originalRequest = error.config;
+
+          if (originalRequest._retry) {
+            clearAuth();
+            window.location.href = "/management/login";
+            return Promise.reject(apiResponse);
+          }
+
+          originalRequest._retry = true;
+
+          if (tokenManager.isTokenRefreshing()) {
+            return new Promise((resolve, reject) => {
+              tokenManager.addRefreshSubscriber((newToken) => {
+                originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                resolve(axiosClient(originalRequest));
+              });
+            });
+          } else {
+            await refreshAccessToken();
+
+            const newToken = tokenManager.getToken();
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
+            return axiosClient(originalRequest);
+          }
+        } catch (refreshError) {
+          return Promise.reject(refreshError);
         }
       }
 

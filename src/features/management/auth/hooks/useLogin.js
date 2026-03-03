@@ -38,7 +38,9 @@ export const useLogin = () => {
     error,
   } = useMutation(handleLogin, {
     onSuccess: (response) => {
-      contextLogin(response.accessToken, response.user);
+      const expiresInMinutes = response.expiresInMinutes || 15;
+
+      contextLogin(response.accessToken, response.user, expiresInMinutes);
 
       const userRoles = response.user?.roles || [];
 
@@ -51,6 +53,7 @@ export const useLogin = () => {
         navigate("/management/tables", { replace: true });
       }
     },
+    onError: (error) => {},
   });
 
   return { login, isLoading, error };

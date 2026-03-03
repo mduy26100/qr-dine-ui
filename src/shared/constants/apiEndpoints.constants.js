@@ -3,6 +3,7 @@ export const ENDPOINTS = {
     AUTH: {
       LOGIN: "/auth/login",
       LOGOUT: "/users/logout",
+      REFRESH_TOKEN: "/auth/refresh-token",
       REGISTER_MERCHANT: "/users/register-merchant",
       REGISTER_STAFF: "/users/register-staff",
     },

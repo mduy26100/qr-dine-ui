@@ -1,37 +1,49 @@
-import { STORAGE_KEYS } from "./storage.constants"
+import { STORAGE_KEYS } from "./storage.constants";
+import { tokenManager } from "../http/tokenManager";
 
-export const setToken = (token) => {
-  localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, token)
-}
+/**
+ * Token Management - In-Memory Storage
+ * AccessToken is stored in memory only (not persistent)
+ * RefreshToken is stored in HttpOnly cookie (managed by server)
+ */
+
+export const setToken = (token, expiresInMinutes = 15) => {
+  tokenManager.setToken(token, expiresInMinutes);
+};
 
 export const getToken = () => {
-  return localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
-}
+  return tokenManager.getToken();
+};
 
 export const removeToken = () => {
-  localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN)
-}
+  tokenManager.clearToken();
+};
+
+/**
+ * User Management - LocalStorage
+ * User info is stored in localStorage for persistence during session
+ */
 
 export const setUser = (user) => {
-  localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user))
-}
+  localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+};
 
 export const getUser = () => {
-  const user = localStorage.getItem(STORAGE_KEYS.USER)
-  if (!user) return null
+  const user = localStorage.getItem(STORAGE_KEYS.USER);
+  if (!user) return null;
 
   try {
-    return JSON.parse(user)
+    return JSON.parse(user);
   } catch {
-    return null
+    return null;
   }
-}
+};
 
 export const removeUser = () => {
-  localStorage.removeItem(STORAGE_KEYS.USER)
-}
+  localStorage.removeItem(STORAGE_KEYS.USER);
+};
 
 export const clearAuth = () => {
-  removeToken()
-  removeUser()
-}
+  removeToken();
+  removeUser();
+};
