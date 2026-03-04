@@ -43,3 +43,19 @@ export const createProduct = (data) => {
     },
   });
 };
+
+export const updateProduct = ({ id, ...data }) => {
+  const formData = new FormData();
+  formData.append("Name", data.name?.trim() || "");
+  formData.append("Description", data.description?.trim() || "");
+  formData.append("Price", data.price);
+  formData.append("IsAvailable", data.isAvailable);
+  formData.append("CategoryId", data.categoryId);
+  formData.append("ImageFile", data.imageFile);
+
+  return axiosClient.put(`${CATALOG_PRODUCT_ENDPOINT}/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};

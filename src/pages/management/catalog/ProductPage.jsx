@@ -29,6 +29,7 @@ import UpsertProductModal from "../../../features/management/catalog/products/co
 import { useGetMyProductsByPage } from "../../../features/management/catalog/products/hooks/useGetMyProductsByPage";
 import { useGetMyProductsByCursor } from "../../../features/management/catalog/products/hooks/useGetMyProductsByCursor";
 import { useCreateProduct } from "../../../features/management/catalog/products/hooks/useCreateProduct";
+import { useUpdateProduct } from "../../../features/management/catalog/products/hooks/useUpdateProduct";
 import { useGetMyCategories } from "../../../features/management/catalog/categories/hooks/useGetMyCategories";
 
 const { Title, Text } = Typography;
@@ -63,6 +64,7 @@ export const ProductPage = () => {
   const [editingProduct, setEditingProduct] = useState(null);
 
   const { create: createProduct, isLoading: isCreating } = useCreateProduct();
+  const { update: updateProduct, isLoading: isUpdating } = useUpdateProduct();
 
   const viewMode = searchParams.get("view") === "list" ? "list" : "table";
   const searchTermParam = searchParams.get("search") || "";
@@ -288,10 +290,27 @@ export const ProductPage = () => {
   const handleUpsertSubmit = useCallback(
     (payload, formInstance) => {
       if (editingProduct) {
-        messageApi.open({
-          type: "info",
-          content: "Tính năng cập nhật đang được phát triển",
-        });
+        updateProduct(
+          { id: editingProduct.id, ...payload },
+          {
+            onSuccess: () => {
+              messageApi.open({
+                type: "success",
+                content: `Cập nhật sản phẩm "${payload.name}" thành công!`,
+              });
+              handleCloseUpsertModal();
+              refetchPage();
+              refetchCursor();
+            },
+            onError: (error) => {
+              messageApi.open({
+                type: "error",
+                content:
+                  error?.error?.message || error?.message || "Có lỗi xảy ra",
+              });
+            },
+          },
+        );
       } else {
         createProduct(payload, {
           onSuccess: () => {
@@ -316,6 +335,7 @@ export const ProductPage = () => {
     [
       editingProduct,
       createProduct,
+      updateProduct,
       messageApi,
       handleCloseUpsertModal,
       refetchPage,
@@ -358,7 +378,7 @@ export const ProductPage = () => {
         open={isUpsertModalOpen}
         onCancel={handleCloseUpsertModal}
         onSubmit={handleUpsertSubmit}
-        confirmLoading={isCreating}
+        confirmLoading={isCreating || isUpdating}
         categoryTreeData={categoryTreeData}
         initialValues={editingProduct}
       />
