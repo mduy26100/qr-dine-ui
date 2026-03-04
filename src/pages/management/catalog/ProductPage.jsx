@@ -30,6 +30,7 @@ import { useGetMyProductsByPage } from "../../../features/management/catalog/pro
 import { useGetMyProductsByCursor } from "../../../features/management/catalog/products/hooks/useGetMyProductsByCursor";
 import { useCreateProduct } from "../../../features/management/catalog/products/hooks/useCreateProduct";
 import { useUpdateProduct } from "../../../features/management/catalog/products/hooks/useUpdateProduct";
+import { useDeleteProduct } from "../../../features/management/catalog/products/hooks/useDeleteProduct";
 import { useGetMyCategories } from "../../../features/management/catalog/categories/hooks/useGetMyCategories";
 
 const { Title, Text } = Typography;
@@ -65,6 +66,7 @@ export const ProductPage = () => {
 
   const { create: createProduct, isLoading: isCreating } = useCreateProduct();
   const { update: updateProduct, isLoading: isUpdating } = useUpdateProduct();
+  const { remove: deleteProduct } = useDeleteProduct();
 
   const viewMode = searchParams.get("view") === "list" ? "list" : "table";
   const searchTermParam = searchParams.get("search") || "";
@@ -358,15 +360,32 @@ export const ProductPage = () => {
         okType: "danger",
         cancelText: "Hủy",
         centered: true,
-        onOk: async () => {
-          messageApi.open({
-            type: "info",
-            content: "Tính năng xóa đang được phát triển",
+        onOk: () => {
+          return new Promise((resolve, reject) => {
+            deleteProduct(record.id, {
+              onSuccess: () => {
+                messageApi.open({
+                  type: "success",
+                  content: `Xóa sản phẩm "${record.name}" thành công!`,
+                });
+                refetchPage();
+                refetchCursor();
+                resolve();
+              },
+              onError: (error) => {
+                messageApi.open({
+                  type: "error",
+                  content:
+                    error?.error?.message || error?.message || "Có lỗi xảy ra",
+                });
+                reject();
+              },
+            });
           });
         },
       });
     },
-    [modal, messageApi],
+    [modal, messageApi, deleteProduct, refetchPage, refetchCursor],
   );
 
   return (

@@ -59,3 +59,7 @@ export const updateProduct = ({ id, ...data }) => {
     },
   });
 };
+
+export const deleteProduct = (id) => {
+  return axiosClient.delete(`${CATALOG_PRODUCT_ENDPOINT}/${id}`);
+};
