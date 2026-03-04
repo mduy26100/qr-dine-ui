@@ -17,7 +17,7 @@ import {
 } from "../../infrastructure";
 import { tokenManager } from "../../infrastructure/http/tokenManager";
 import { useRefreshToken } from "../../features/management/auth/hooks";
-import { AUTH_STATUS } from "../../shared/constants";
+import { AUTH_STATUS, TOKEN_REFRESH_CONFIG } from "../../shared/constants";
 const AuthContext = createContext(null);
 export { AuthContext };
 export const AuthProvider = ({ children }) => {
@@ -38,9 +38,11 @@ export const AuthProvider = ({ children }) => {
 
     clearAutoRefresh();
 
-    const refreshBeforeExpiry = 1;
     const refreshInterval =
-      (expiresInMinutes - refreshBeforeExpiry) * 60 * 1000;
+      expiresInMinutes *
+      (1 - TOKEN_REFRESH_CONFIG.REFRESH_BEFORE_EXPIRY_PERCENTAGE) *
+      60 *
+      1000;
     const safeInterval = Math.max(refreshInterval, 30 * 1000);
 
     refreshIntervalRef.current = setInterval(async () => {
@@ -53,7 +55,10 @@ export const AuthProvider = ({ children }) => {
         if (tokenData?.accessToken) {
           setToken(tokenData.accessToken, tokenData.expiresInMinutes);
           const newRefreshInterval =
-            (tokenData.expiresInMinutes - refreshBeforeExpiry) * 60 * 1000;
+            tokenData.expiresInMinutes *
+            (1 - TOKEN_REFRESH_CONFIG.REFRESH_BEFORE_EXPIRY_PERCENTAGE) *
+            60 *
+            1000;
           const newSafeInterval = Math.max(newRefreshInterval, 30 * 1000);
 
           clearAutoRefresh();

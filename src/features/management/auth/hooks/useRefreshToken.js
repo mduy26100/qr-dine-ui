@@ -14,7 +14,7 @@ export const useRefreshToken = () => {
         const response = await refreshTokenAPI();
         return {
           accessToken: response?.accessToken,
-          expiresInMinutes: response?.expiresInMinutes || 15,
+          expiresInMinutes: response?.expiresInMinutes,
         };
       } finally {
         tokenManager.clearRefreshPromise();

@@ -38,7 +38,7 @@ export const useLogin = () => {
     error,
   } = useMutation(handleLogin, {
     onSuccess: (response) => {
-      const expiresInMinutes = response.expiresInMinutes || 15;
+      const expiresInMinutes = response.expiresInMinutes;
 
       contextLogin(response.accessToken, response.user, expiresInMinutes);
 

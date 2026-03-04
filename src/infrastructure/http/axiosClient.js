@@ -55,7 +55,7 @@ const refreshAccessToken = async () => {
     const response = await axiosClient.post("/auth/refresh-token");
 
     const newAccessToken = response?.accessToken;
-    const expiresInMinutes = response?.expiresInMinutes || 15;
+    const expiresInMinutes = response?.expiresInMinutes;
 
     tokenManager.setToken(newAccessToken, expiresInMinutes);
 
