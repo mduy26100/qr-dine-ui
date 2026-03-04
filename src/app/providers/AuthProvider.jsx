@@ -12,6 +12,8 @@ import {
   getUser,
   clearAuth,
   clearGlobalCache,
+  setHasLoggedIn,
+  hasLoggedInBefore,
 } from "../../infrastructure";
 import { tokenManager } from "../../infrastructure/http/tokenManager";
 import { useRefreshToken } from "../../features/management/auth/hooks";
@@ -30,6 +32,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
   const setupAutoRefresh = (expiresInMinutes) => {
+    if (!tokenManager.hasToken()) {
+      return;
+    }
+
     clearAutoRefresh();
 
     const refreshBeforeExpiry = 1;
@@ -71,6 +77,7 @@ export const AuthProvider = ({ children }) => {
     clearAutoRefresh();
   };
   const handleLogin = (accessToken, userPayload, expiresInMinutes = 15) => {
+    setHasLoggedIn();
     setToken(accessToken, expiresInMinutes);
     setStorageUser(userPayload);
     setCurrentUser(userPayload);
@@ -79,6 +86,11 @@ export const AuthProvider = ({ children }) => {
   };
   useEffect(() => {
     const initAuth = async () => {
+      if (!hasLoggedInBefore()) {
+        setAuthStatus(AUTH_STATUS.UNAUTHENTICATED);
+        return;
+      }
+
       try {
         const tokenData = await refreshToken();
         if (tokenData?.accessToken) {

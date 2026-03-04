@@ -46,4 +46,13 @@ export const removeUser = () => {
 export const clearAuth = () => {
   removeToken();
   removeUser();
+  localStorage.removeItem(STORAGE_KEYS.HAS_LOGGED_IN);
+};
+
+export const setHasLoggedIn = () => {
+  localStorage.setItem(STORAGE_KEYS.HAS_LOGGED_IN, "true");
+};
+
+export const hasLoggedInBefore = () => {
+  return localStorage.getItem(STORAGE_KEYS.HAS_LOGGED_IN) === "true";
 };
