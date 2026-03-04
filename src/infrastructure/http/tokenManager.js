@@ -2,8 +2,7 @@ class TokenManager {
   constructor() {
     this.accessToken = null;
     this.expiresIn = null;
-    this.isRefreshing = false;
-    this.refreshSubscribers = [];
+    this.refreshPromise = null;
   }
 
   setToken(token, expiresInMinutes = 15) {
@@ -22,35 +21,23 @@ class TokenManager {
   clearToken() {
     this.accessToken = null;
     this.expiresIn = null;
-    this.isRefreshing = false;
-    this.refreshSubscribers = [];
+    this.refreshPromise = null;
   }
 
   getExpireIn() {
     return this.expiresIn;
   }
 
-  setRefreshing(state) {
-    this.isRefreshing = state;
+  getRefreshPromise() {
+    return this.refreshPromise;
   }
 
-  isTokenRefreshing() {
-    return this.isRefreshing;
+  setRefreshPromise(promise) {
+    this.refreshPromise = promise;
   }
 
-  addRefreshSubscriber(callback) {
-    this.refreshSubscribers.push(callback);
-  }
-
-  notifyRefreshSubscribers(newToken) {
-    this.refreshSubscribers.forEach((callback) => {
-      callback(newToken);
-    });
-    this.refreshSubscribers = [];
-  }
-
-  failRefreshSubscribers() {
-    this.refreshSubscribers = [];
+  clearRefreshPromise() {
+    this.refreshPromise = null;
   }
 
   reset() {

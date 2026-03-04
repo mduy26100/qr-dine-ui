@@ -1,13 +1,13 @@
 import axios from "axios";
 import { clearAuth, getToken } from "../storage";
 import { tokenManager } from "./tokenManager";
-import { refreshTokenAPI } from "../../features/management/auth/api";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const axiosClient = axios.create({
   baseURL: API_URL,
   timeout: 30000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -52,20 +52,10 @@ const refreshAccessToken = async () => {
   tokenManager.setRefreshing(true);
 
   try {
-    const response = await axios.post(
-      `${API_URL}${"/auth/refresh-token"}`,
-      {},
-      {
-        withCredentials: true,
-      },
-    );
+    const response = await axiosClient.post("/auth/refresh-token");
 
-    const newAccessToken =
-      response.data?.data?.accessToken || response.data?.accessToken;
-    const expiresInMinutes =
-      response.data?.data?.expiresInMinutes ||
-      response.data?.expiresInMinutes ||
-      15;
+    const newAccessToken = response?.accessToken;
+    const expiresInMinutes = response?.expiresInMinutes || 15;
 
     tokenManager.setToken(newAccessToken, expiresInMinutes);
 

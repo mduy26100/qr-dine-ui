@@ -1,10 +1,11 @@
 import { AuthProvider, useAuth } from "./providers";
 import { AppRouter } from "./routes";
+import { AUTH_STATUS } from "../shared/constants";
 
 const AppContent = () => {
-  const { isInitialized } = useAuth();
+  const { authStatus } = useAuth();
 
-  if (!isInitialized) {
+  if (authStatus === AUTH_STATUS.CHECKING) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-4">

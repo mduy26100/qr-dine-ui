@@ -2,11 +2,12 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../providers";
 import { Spin } from "antd";
+import { AUTH_STATUS } from "../../shared/constants";
 
 const PrivateRoute = ({ children, allowedRoles }) => {
-  const { isAuthenticated, isInitialized, user } = useAuth();
+  const { authStatus, user } = useAuth();
 
-  if (!isInitialized) {
+  if (authStatus === AUTH_STATUS.CHECKING) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-100">
         <Spin size="large" />
@@ -14,7 +15,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     );
   }
 
-  if (!isAuthenticated) {
+  if (authStatus === AUTH_STATUS.UNAUTHENTICATED) {
     return <Navigate to="/management/login" replace />;
   }
 
@@ -23,10 +24,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     const hasPermission = allowedRoles.some((role) => userRoles.includes(role));
 
     if (!hasPermission) {
-      throw new Response("Forbidden", {
-        status: 403,
-        statusText: "You are not authorized to access this page.",
-      });
+      return <Navigate to="/" replace />;
     }
   }
 

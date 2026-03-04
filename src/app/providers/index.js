@@ -1,2 +1,2 @@
 export * from "./AuthProvider";
-export * from "./bootstrapAuth";
+export { useAuth } from "./useAuth";
