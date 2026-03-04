@@ -26,3 +26,20 @@ export const getMyProductsByCursor = (filters = {}, config = {}) => {
     ...config,
   });
 };
+
+export const createProduct = (data) => {
+  const formData = new FormData();
+
+  formData.append("Name", data.name?.trim() || "");
+  formData.append("Description", data.description?.trim() || "");
+  formData.append("Price", data.price);
+  formData.append("IsAvailable", data.isAvailable);
+  formData.append("CategoryId", data.categoryId);
+  formData.append("ImageFile", data.imageFile);
+
+  return axiosClient.post(CATALOG_PRODUCT_ENDPOINT, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
