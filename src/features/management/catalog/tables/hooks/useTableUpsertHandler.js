@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useCreateTable } from "./useCreateTable";
+import { useUpdateTable } from "./useUpdateTable";
 import { TABLE_MESSAGES } from "../constants";
 
 export const useTableUpsertHandler = ({
@@ -8,14 +9,23 @@ export const useTableUpsertHandler = ({
   onCloseModal,
 }) => {
   const { create: createTable, isLoading: isCreating } = useCreateTable();
+  const { update: updateTable, isUpdating } = useUpdateTable();
 
   const handleUpsert = useCallback(
-    (values) => {
-      createTable(values, {
+    (values, editingRecord) => {
+      const isEdit = !!editingRecord;
+      const action = isEdit ? updateTable : createTable;
+      const payload = isEdit ? { id: editingRecord.id, ...values } : values;
+
+      action(payload, {
         onSuccess: () => {
+          const message = isEdit
+            ? TABLE_MESSAGES.UPDATE_SUCCESS(values.name)
+            : TABLE_MESSAGES.CREATE_SUCCESS(values.name);
+
           onOpenMessage({
             type: "success",
-            content: TABLE_MESSAGES.CREATE_SUCCESS(values.name),
+            content: message,
           });
           onCloseModal();
           onRefetch();
@@ -31,11 +41,11 @@ export const useTableUpsertHandler = ({
         },
       });
     },
-    [createTable, onOpenMessage, onCloseModal, onRefetch],
+    [createTable, updateTable, onOpenMessage, onCloseModal, onRefetch],
   );
 
   return {
     handleUpsert,
-    isLoading: isCreating,
+    isLoading: isCreating || isUpdating,
   };
 };

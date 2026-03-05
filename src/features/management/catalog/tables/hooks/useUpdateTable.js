@@ -1,14 +1,14 @@
 import { QUERY_KEYS } from "../../../../../shared/constants";
 import { invalidateCache, useMutation } from "../../../../../infrastructure";
-import { updateCategory } from "../../api";
+import { updateTable } from "../../api";
 
-export const useUpdateCategory = (options = {}) => {
+export const useUpdateTable = (options = {}) => {
   const { mutate, isLoading, error, mutatingVariables, reset } = useMutation(
-    updateCategory,
+    updateTable,
     {
       ...options,
       onSuccess: (result, variables) => {
-        invalidateCache(QUERY_KEYS.CATALOG.CATEGORIES);
+        invalidateCache(QUERY_KEYS.CATALOG.TABLES);
 
         options.onSuccess?.(result, variables);
       },

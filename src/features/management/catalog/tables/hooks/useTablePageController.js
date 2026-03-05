@@ -65,9 +65,9 @@ export const useTablePageController = ({
 
   const handleUpsertSubmit = useCallback(
     (values) => {
-      upsertHandler.handleUpsert(values);
+      upsertHandler.handleUpsert(values, editingRecord);
     },
-    [upsertHandler],
+    [editingRecord, upsertHandler],
   );
 
   return {

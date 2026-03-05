@@ -10,3 +10,7 @@ export const getMyTables = () => {
 export const createTable = (data) => {
   return axiosClient.post(CATALOG_TABLE_ENDPOINT, data);
 };
+
+export const updateTable = ({ id, ...data }) => {
+  return axiosClient.put(`${CATALOG_TABLE_ENDPOINT}/${id}`, data);
+};
