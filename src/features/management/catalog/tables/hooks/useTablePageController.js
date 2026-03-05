@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useGetMyTables } from "./useGetMyTables";
 import { useTableUpsertHandler } from "./useTableUpsertHandler";
+import { useTableDeleteHandler } from "./useTableDeleteHandler";
 
 export const useTablePageController = ({
   onOpenMessage,
@@ -23,6 +24,12 @@ export const useTablePageController = ({
     onOpenMessage,
     onRefetch: refetch,
     onCloseModal: handleCloseModal,
+  });
+
+  const deleteHandler = useTableDeleteHandler({
+    onShowConfirmModal,
+    onOpenMessage,
+    onRefetch: refetch,
   });
 
   const handleOpenCreate = useCallback(() => {
@@ -49,18 +56,9 @@ export const useTablePageController = ({
 
   const handleDelete = useCallback(
     (record) => {
-      onShowConfirmModal?.({
-        title: "Xóa bàn",
-        message: `Bạn có chắc chắn muốn xóa bàn "${record.name}"?`,
-        description: "Hành động này không thể hoàn tác.",
-        onConfirm: () => {
-          return new Promise((resolve) => {
-            resolve();
-          });
-        },
-      });
+      deleteHandler.handleDelete(record);
     },
-    [onShowConfirmModal],
+    [deleteHandler],
   );
 
   const handleUpsertSubmit = useCallback(

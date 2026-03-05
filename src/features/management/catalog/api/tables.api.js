@@ -14,3 +14,7 @@ export const createTable = (data) => {
 export const updateTable = ({ id, ...data }) => {
   return axiosClient.put(`${CATALOG_TABLE_ENDPOINT}/${id}`, data);
 };
+
+export const deleteTable = (id) => {
+  return axiosClient.delete(`${CATALOG_TABLE_ENDPOINT}/${id}`);
+};
