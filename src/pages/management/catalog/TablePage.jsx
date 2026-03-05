@@ -12,6 +12,7 @@ import {
 import { PlusIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import TableCard from "../../../features/management/catalog/tables/components/TableCard";
+import UpsertTableModal from "../../../features/management/catalog/tables/components/UpsertTableModal";
 import { useTablePageController } from "../../../features/management/catalog/tables/hooks/useTablePageController";
 
 const { Title, Text } = Typography;
@@ -55,12 +56,27 @@ const TablePage = () => {
     onCloseModal: () => {},
   });
 
-  const { tables, isLoading, handlers } = controller;
+  const {
+    isModalOpen,
+    editingRecord,
+    tables,
+    isLoading,
+    isUpsertLoading,
+    handlers,
+  } = controller;
 
   return (
     <div className="animate-fade-in space-y-6">
       {contextHolder}
       {modalContextHolder}
+
+      <UpsertTableModal
+        open={isModalOpen}
+        onCancel={handlers.handleCloseModal}
+        onSubmit={handlers.handleUpsertSubmit}
+        confirmLoading={isUpsertLoading}
+        initialValues={editingRecord}
+      />
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

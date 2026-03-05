@@ -6,3 +6,7 @@ const CATALOG_TABLE_ENDPOINT = ENDPOINTS.MANAGEMENT.CATALOG.TABLES;
 export const getMyTables = () => {
   return axiosClient.get(CATALOG_TABLE_ENDPOINT);
 };
+
+export const createTable = (data) => {
+  return axiosClient.post(CATALOG_TABLE_ENDPOINT, data);
+};

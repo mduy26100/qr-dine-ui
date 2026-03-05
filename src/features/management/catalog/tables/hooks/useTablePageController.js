@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useGetMyTables } from "./useGetMyTables";
+import { useTableUpsertHandler } from "./useTableUpsertHandler";
 
 export const useTablePageController = ({
   onOpenMessage,
@@ -7,16 +8,31 @@ export const useTablePageController = ({
   onCloseModal,
 }) => {
   const { data: responseData, isLoading, refetch } = useGetMyTables();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
 
   const tables = responseData || [];
 
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+    setEditingRecord(null);
+    onCloseModal?.();
+  }, [onCloseModal]);
+
+  const upsertHandler = useTableUpsertHandler({
+    onOpenMessage,
+    onRefetch: refetch,
+    onCloseModal: handleCloseModal,
+  });
+
   const handleOpenCreate = useCallback(() => {
     setEditingRecord(null);
+    setIsModalOpen(true);
   }, []);
 
   const handleOpenEdit = useCallback((record) => {
     setEditingRecord(record);
+    setIsModalOpen(true);
   }, []);
 
   const handleViewQr = useCallback(
@@ -47,16 +63,27 @@ export const useTablePageController = ({
     [onShowConfirmModal],
   );
 
+  const handleUpsertSubmit = useCallback(
+    (values) => {
+      upsertHandler.handleUpsert(values);
+    },
+    [upsertHandler],
+  );
+
   return {
+    isModalOpen,
     editingRecord,
     tables,
     isLoading,
+    isUpsertLoading: upsertHandler.isLoading,
     handlers: {
       handleOpenCreate,
       handleOpenEdit,
       handleViewQr,
       handleDelete,
       handleRefetch: refetch,
+      handleCloseModal,
+      handleUpsertSubmit,
     },
   };
 };
