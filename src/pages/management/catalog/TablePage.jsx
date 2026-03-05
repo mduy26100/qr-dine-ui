@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   Button,
   Card,
@@ -14,12 +14,23 @@ import { ExclamationCircleFilled } from "@ant-design/icons";
 import TableCard from "../../../features/management/catalog/tables/components/TableCard";
 import UpsertTableModal from "../../../features/management/catalog/tables/components/UpsertTableModal";
 import { useTablePageController } from "../../../features/management/catalog/tables/hooks/useTablePageController";
+import { useAuth } from "../../../app/providers";
+import { SYSTEM_ROLE } from "../../../shared/constants";
 
 const { Title, Text } = Typography;
 
 const TablePage = () => {
+  const { user } = useAuth();
   const [messageApi, contextHolder] = message.useMessage();
   const [modal, modalContextHolder] = Modal.useModal();
+
+  const hasManagePermission = useMemo(() => {
+    if (!user?.roles) return false;
+    return (
+      user.roles.includes(SYSTEM_ROLE.MERCHANT) ||
+      user.roles.includes(SYSTEM_ROLE.SUPPER_ADMIN)
+    );
+  }, [user?.roles]);
 
   const handleConfirmDelete = useCallback(
     ({ title, message: messageText, description, onConfirm }) => {
@@ -98,14 +109,16 @@ const TablePage = () => {
             >
               Làm mới
             </Button>
-            <Button
-              type="primary"
-              icon={<PlusIcon className="w-4 h-4" />}
-              className="bg-blue-600 hover:!bg-blue-700 border-none h-10 rounded-xl flex items-center shadow-lg shadow-blue-100"
-              onClick={handlers.handleOpenCreate}
-            >
-              Thêm bàn
-            </Button>
+            {hasManagePermission && (
+              <Button
+                type="primary"
+                icon={<PlusIcon className="w-4 h-4" />}
+                className="bg-blue-600 hover:!bg-blue-700 border-none h-10 rounded-xl flex items-center shadow-lg shadow-blue-100"
+                onClick={handlers.handleOpenCreate}
+              >
+                Thêm bàn
+              </Button>
+            )}
           </Space>
         </div>
       </div>
@@ -118,6 +131,7 @@ const TablePage = () => {
                 <TableCard
                   key={table.id}
                   item={table}
+                  hasManagePermission={hasManagePermission}
                   onEdit={handlers.handleOpenEdit}
                   onDelete={handlers.handleDelete}
                   onViewQr={handlers.handleViewQr}

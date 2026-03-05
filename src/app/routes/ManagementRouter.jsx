@@ -73,7 +73,7 @@ const ManagementRouter = () => {
         <Route
           path="tables"
           element={
-            <RoleRoute roles={[SYSTEM_ROLE.MERCHANT]}>
+            <RoleRoute roles={[SYSTEM_ROLE.MERCHANT, SYSTEM_ROLE.STAFF]}>
               <TablePage />
             </RoleRoute>
           }

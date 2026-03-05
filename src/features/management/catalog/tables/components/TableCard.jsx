@@ -8,7 +8,13 @@ import {
 
 const { Text } = Typography;
 
-const TableCard = ({ item, onEdit, onDelete, onViewQr }) => {
+const TableCard = ({
+  item,
+  hasManagePermission = true,
+  onEdit,
+  onDelete,
+  onViewQr,
+}) => {
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const handlePreviewQr = () => {
@@ -19,6 +25,63 @@ const TableCard = ({ item, onEdit, onDelete, onViewQr }) => {
     setPreviewOpen(true);
     onViewQr?.(item);
   };
+
+  const actions = hasManagePermission
+    ? [
+        <div className="flex justify-center items-center w-full" key="qr">
+          <Tooltip title="Xem mã QR">
+            <Button
+              type="text"
+              size="large"
+              icon={<QrCodeIcon className="w-5 h-5 text-emerald-600" />}
+              className="flex items-center justify-center hover:bg-emerald-50 border-none shadow-none"
+              onClick={handlePreviewQr}
+            />
+          </Tooltip>
+        </div>,
+        <div
+          className="flex justify-center items-center w-full border-l border-gray-100"
+          key="edit"
+        >
+          <Tooltip title="Chỉnh sửa">
+            <Button
+              type="text"
+              size="large"
+              icon={<PencilSquareIcon className="w-5 h-5 text-indigo-600" />}
+              className="flex items-center justify-center hover:bg-indigo-50 border-none shadow-none"
+              onClick={() => onEdit?.(item)}
+            />
+          </Tooltip>
+        </div>,
+        <div
+          className="flex justify-center items-center w-full border-l border-gray-100"
+          key="delete"
+        >
+          <Tooltip title="Xóa">
+            <Button
+              type="text"
+              size="large"
+              danger
+              icon={<TrashIcon className="w-5 h-5" />}
+              className="flex items-center justify-center hover:bg-rose-50 border-none shadow-none"
+              onClick={() => onDelete?.(item)}
+            />
+          </Tooltip>
+        </div>,
+      ]
+    : [
+        <div className="flex justify-center items-center w-full" key="qr">
+          <Tooltip title="Xem mã QR">
+            <Button
+              type="text"
+              size="large"
+              icon={<QrCodeIcon className="w-5 h-5 text-emerald-600" />}
+              className="flex items-center justify-center hover:bg-emerald-50 border-none shadow-none w-full"
+              onClick={handlePreviewQr}
+            />
+          </Tooltip>
+        </div>,
+      ];
 
   return (
     <>
@@ -33,48 +96,7 @@ const TableCard = ({ item, onEdit, onDelete, onViewQr }) => {
             backgroundColor: "#fafafa",
           },
         }}
-        actions={[
-          <div className="flex justify-center items-center w-full" key="qr">
-            <Tooltip title="Xem mã QR">
-              <Button
-                type="text"
-                size="large"
-                icon={<QrCodeIcon className="w-5 h-5 text-emerald-600" />}
-                className="flex items-center justify-center hover:bg-emerald-50 border-none shadow-none"
-                onClick={handlePreviewQr}
-              />
-            </Tooltip>
-          </div>,
-          <div
-            className="flex justify-center items-center w-full border-l border-gray-100"
-            key="edit"
-          >
-            <Tooltip title="Chỉnh sửa">
-              <Button
-                type="text"
-                size="large"
-                icon={<PencilSquareIcon className="w-5 h-5 text-indigo-600" />}
-                className="flex items-center justify-center hover:bg-indigo-50 border-none shadow-none"
-                onClick={() => onEdit?.(item)}
-              />
-            </Tooltip>
-          </div>,
-          <div
-            className="flex justify-center items-center w-full border-l border-gray-100"
-            key="delete"
-          >
-            <Tooltip title="Xóa">
-              <Button
-                type="text"
-                size="large"
-                danger
-                icon={<TrashIcon className="w-5 h-5" />}
-                className="flex items-center justify-center hover:bg-rose-50 border-none shadow-none"
-                onClick={() => onDelete?.(item)}
-              />
-            </Tooltip>
-          </div>,
-        ]}
+        actions={actions}
       >
         <div className="flex flex-col items-center justify-center gap-2 py-2">
           <div
