@@ -7,6 +7,7 @@ import {
   LoginPage,
   CategoryPage,
   ProductPage,
+  TablePage,
 } from "../../pages";
 import { SYSTEM_ROLE } from "../../shared/constants";
 import { useAuth } from "../providers";
@@ -65,6 +66,15 @@ const ManagementRouter = () => {
           element={
             <RoleRoute roles={[SYSTEM_ROLE.MERCHANT]}>
               <ProductPage />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="tables"
+          element={
+            <RoleRoute roles={[SYSTEM_ROLE.MERCHANT]}>
+              <TablePage />
             </RoleRoute>
           }
         />
