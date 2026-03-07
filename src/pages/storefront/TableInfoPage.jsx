@@ -19,13 +19,12 @@ const TableInfoPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const { setSessionInfo } = useStorefrontTable();
 
-  const { isLoading, tableInfo, currentGreeting } =
-    useTableInfoPageController({
-      merchantId,
-      qrCodeToken,
-      onOpenMessage: (config) => messageApi.open(config),
-      setSessionInfo,
-    });
+  const { isLoading, tableInfo, currentGreeting } = useTableInfoPageController({
+    merchantId,
+    qrCodeToken,
+    onOpenMessage: (config) => messageApi.open(config),
+    setSessionInfo,
+  });
 
   if (isLoading) {
     return (
@@ -47,7 +46,7 @@ const TableInfoPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-24 md:pb-8">
+    <div className="min-h-screen bg-white">
       {contextHolder}
 
       <div className="sticky top-0 z-10 bg-white border-b border-gray-100 p-4 md:p-6">
@@ -85,9 +84,24 @@ const TableInfoPage = () => {
         </div>
 
         <ActionButtonsGrid buttons={STOREFRONT_ACTION_BUTTONS} />
-      </div>
 
-      <MenuCTA merchantId={merchantId} qrCodeToken={qrCodeToken} />
+        <MenuCTA merchantId={merchantId} qrCodeToken={qrCodeToken} />
+
+        <div className="text-center py-8 text-xs text-gray-400 select-none">
+          <p>
+            Powered by{" "}
+            <span className="font-semibold text-gray-500">DUYDM</span>
+          </p>
+          <a
+            href="https://www.facebook.com/zuynuxi/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-gray-600 transition"
+          >
+            Triển khai hệ thống cho nhà hàng của bạn – Liên hệ tại đây
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
