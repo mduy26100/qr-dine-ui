@@ -42,6 +42,8 @@ export const StorefrontTableProvider = ({ children }) => {
 
     if (sessionId) {
       localStorage.setItem(STORAGE_KEYS.STOREFRONT_SESSION_ID, sessionId);
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.STOREFRONT_SESSION_ID);
     }
   }, []);
 
