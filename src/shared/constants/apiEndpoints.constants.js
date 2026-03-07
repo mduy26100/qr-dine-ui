@@ -19,6 +19,7 @@ export const ENDPOINTS = {
         `/storefront/merchants/${merchantId}/categories`,
       PRODUCTS: (merchantId, categoryId) =>
         `/storefront/merchants/${merchantId}/products?categoryId=${categoryId}`,
+      TABLES: (merchantId) => `/storefront/merchants/${merchantId}/tables`,
     },
   },
 };

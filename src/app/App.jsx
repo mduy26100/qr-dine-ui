@@ -1,4 +1,9 @@
-import { AuthProvider, useAuth } from "./providers";
+import {
+  AuthProvider,
+  useAuth,
+  StorefrontTableProvider,
+  StorefrontMenuProvider,
+} from "./providers";
 import { AppRouter } from "./routes";
 import { AUTH_STATUS } from "../shared/constants";
 
@@ -23,7 +28,11 @@ const App = () => {
   return (
     <>
       <AuthProvider>
-        <AppContent />
+        <StorefrontTableProvider>
+          <StorefrontMenuProvider>
+            <AppContent />
+          </StorefrontMenuProvider>
+        </StorefrontTableProvider>
       </AuthProvider>
     </>
   );
