@@ -7,10 +7,11 @@ export const useTableInfoPageController = ({
   onOpenMessage,
   setSessionInfo,
 }) => {
-  const { data: tableInfo, isLoading, error } = useGetTableInfo(
-    merchantId,
-    qrCodeToken
-  );
+  const {
+    data: tableInfo,
+    isLoading,
+    error,
+  } = useGetTableInfo(merchantId, qrCodeToken);
 
   const currentGreeting = useMemo(() => {
     const hour = new Date().getHours();

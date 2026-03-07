@@ -64,7 +64,7 @@ export const useMenuPageController = ({
         duration: 1.5,
       });
     },
-    [addToCart, onOpenMessage]
+    [addToCart, onOpenMessage],
   );
 
   const handleProductClick = useCallback((product) => {
@@ -81,7 +81,7 @@ export const useMenuPageController = ({
     ?.map((category) => ({
       ...category,
       products: category.products.filter((product) =>
-        product.name.toLowerCase().includes(searchValue.toLowerCase())
+        product.name.toLowerCase().includes(searchValue.toLowerCase()),
       ),
     }))
     .filter((category) => category.products.length > 0);
